@@ -1,8 +1,7 @@
 <template>
   <div>
     <div id="sb_list">
-      <sb_list_shot v-for="shot in $store.state.shots" :key="shot.id" :shotId="shot.id">
-        {{shot.id}}
+      <sb_list_shot v-for="shotId in $store.state.shotsOrder" :key="shotId" :shotId="shotId">
       </sb_list_shot>
     </div>
   </div>

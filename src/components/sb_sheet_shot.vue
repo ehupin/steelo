@@ -1,22 +1,49 @@
 <template>
-  <div id="sb_sheetItem" draggable="true" @dragstart="dragStart">
-    <sb_sheet_drop_area :nextShotId="shotId"/>
-    <div id="sb_shot">
-      <div>{{$store.getters.getShotIndex(shotId).toString().padStart(3,'0')}}</div>
+  <div id="sb_sheetItem" draggable="true" @dragstart="dragStart" :style="{height: cardHeight}">
 
-      <div :style="style" @click="thumbnailClicked">
+    <sb_sheet_drop_area :nextShotId="shotId"/>
+
+
+    <div id="sb_shot" >
+
+      <div class="delete-button-container">
+        <i class="fa fa-close delete-button"></i>
+      </div>
+
+      <div>Shot {{paddedNumber}}</div>
+
+      <div :style="thumbnailStyle" @click="thumbnailClicked">
         <img :src="$store.getters.getShotThumbnail(shotId).src" />
       </div>
 
       <div id="description">
         <input placeholder="Description..."/>
       </div>
+
     </div>
+
     <sb_sheet_drop_area v-if="isLast" />
+
   </div>
 </template>
 
 <style scoped>
+  .delete-button-container{
+    height: 20px;
+    display: flex;
+    flex-direction: row-reverse;
+  }
+  .delete-button{
+    font-size: 24px;
+    color: #ebebeb;
+    transition: color 0.1s;
+    cursor: pointer;
+  }
+  .delete-button:hover{
+    font-size: 24px;
+    color: #b7b7b7;
+    transition: color 0.1s;
+  }
   #sb_sheetItem{
     display: flex;
     flex-direction: row;
@@ -24,11 +51,15 @@
     cursor: grab;
   }
   #sb_shot{
-    padding: 20px;
+    background-color: white;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 20px;
     box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
   }
   img{
     width: inherit;
+    /*cursor: url("../assets/icons/pencil.png")*/
   }
   #description input{
     font-style: italic;
@@ -48,35 +79,16 @@
 
   export default {
     components: {sb_sheet_drop_area},
+    mixins: [sb_shot_item_MIXIN],
     data: function(){
       return {
         thumbnailWidth : 300
       }
     },
-    mixins: [sb_shot_item_MIXIN]
-//    props: {
-//      shotId : '',
-//    },
-//    computed: {
-//      style(){
-//        return {
-//          width: this.thumbnailWidth + 'px',
-//          height: this.thumbnailWidth / this.$store.state.frameRatio + 'px',
-//          border: 'solid black 1px',
-//        }
-//      },
-//      isLast(){
-//        return this.$store.getters.getShotIndex(this.shotId) == this.$store.state.shotsOrder.length -1
-//      }
-//    },
-//    methods:{
-//      thumbnailClicked(){
-//        EventBus.$emit('openDrawingTool', this.shotId)
-//      },
-//      dragStart(event){
-//        console.log(event)
-//        event.dataTransfer.setData("text", this.shotId);
-//      }
-//    }
+    computed:{
+      cardHeight(){
+        return this.thumbnailHeight + 100 + 'px'
+      }
+    }
   }
 </script>

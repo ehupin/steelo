@@ -45,16 +45,39 @@ const store = new Vuex.Store({
       Vue.set(state.shots[data.shotId], 'image', newImage);
     },
     MOVE_SHOT(state,data){
+      // get shot position and remove it from shosOrder list
       let from = state.shotsOrder.indexOf(data.shotId);
       state.shotsOrder.splice(from, 1);
 
+      // if shot must be placed before an other one, insert it
       if (data && data.before){
         let to = state.shotsOrder.indexOf(data.before);
         state.shotsOrder.splice( to, 0, data.shotId );
+
+      // else add it to the end of the list
       }else{
         state.shotsOrder.push(data.shotId)
       }
+    },
+    COPY_SHOT(state, data){
 
+      let originalShot = state.shots[data.shotId]
+
+      let copiedShot = new Shot();
+      copiedShot.description = originalShot.description
+      copiedShot.image = originalShot.image.cloneNode()
+
+      Vue.set(state.shots, copiedShot.id, copiedShot);
+
+      // if shot must be placed before an other one, insert it
+      if (data && data.before){
+        let to = state.shotsOrder.indexOf(data.before);
+        state.shotsOrder.splice( to, 0, copiedShot.id );
+
+        // else add it to the end of the list
+      }else{
+        state.shotsOrder.push(copiedShot.id)
+      }
 
     }
   },

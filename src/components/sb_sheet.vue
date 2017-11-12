@@ -3,32 +3,35 @@
     <!--<button @click="$store.commit('ADD_SHOT')">Add shot</button>-->
     <!--<button @click="$store.commit('CHANGE_RATIO')">Change Ratio</button>-->
 
-    <div id="sb_sheet">
+    <!--<div id="sb_sheet">-->
       <sb_sheet_shot v-for="shotId in $store.state.shotsOrder" :key="shotId" :shotId="shotId"/>
-    </div>
+    <!--</div>-->
 
   </div>
 </template>
 
 <style>
   #sb_sheet_background{
-    background: #eee;
-    margin:0px;
-    padding:0px;
-    width: 100%;
+    background: #f6f6f6;
+    /* margin: 0px; */
+    padding: 10px;
+    /* width: 100%; */
     height: 100%;
-    padding: 50px;
+    /* padding: 50px; */
     overflow: scroll;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-content: flex-start;
 
   }
   #sb_sheet{
     width: 80%;
     padding: 30px;
-    background: white;
+    background: #eee;
     box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+
   }
 
 </style>
