@@ -1,11 +1,6 @@
 import {EventBus} from '../_eventBus.js'
 
 export const sb_shot_item_MIXIN =  {
-  data(){
-    return {
-      thumbnailHeight: 0
-    }
-  },
   created(){
     this.thumbnailHeight = this.thumbnailWidth / this.$store.state.frameRatio
   },
@@ -18,13 +13,25 @@ export const sb_shot_item_MIXIN =  {
         width: this.thumbnailWidth + 'px',
         height:  this.thumbnailHeight + 'px',
         border: 'solid black 1px',
+        flex: 'none',
       }
     },
     isLast() {
       return this.$store.getters.getShotIndex(this.shotId) == this.$store.state.shotsOrder.length - 1
     },
+    isFirst(){
+      return this.$store.getters.getShotIndex(this.shotId) == 0
+    },
     paddedNumber(){
       return this.$store.getters.getShotIndex(this.shotId).toString().padStart(3,'0')
+    },
+    description: {
+      get () {
+        return this.$store.state.shots[this.shotId].description
+      },
+      set (value) {
+        this.$store.commit('SET_SHOT_DESCRIPTION', {shotId: this.shotId, description: value})
+      }
     }
   },
   methods: {
@@ -34,6 +41,9 @@ export const sb_shot_item_MIXIN =  {
     dragStart(event) {
       console.log(event)
       event.dataTransfer.setData("text", this.shotId);
+    },
+    deleteShot(){
+      this.$store.commit('DELETE_SHOT', {shotId: this.shotId})
     }
   }
 }

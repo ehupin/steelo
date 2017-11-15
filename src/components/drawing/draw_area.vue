@@ -24,7 +24,6 @@
   export default {
     data: function(){
       return {
-        width: 700,
         prevPos: {x:0, y:0},
         context: null,
         isDrawing: false,
@@ -34,6 +33,9 @@
       this.context = this.$refs.canvas.getContext("2d")
     },
     computed:{
+      width(){
+        return this.$store.state.frameWidth
+      },
       height(){
         return this.width / this.$store.state.frameRatio
       },

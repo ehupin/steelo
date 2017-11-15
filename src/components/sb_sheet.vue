@@ -1,11 +1,7 @@
 <template>
   <div id="sb_sheet_background">
-    <!--<button @click="$store.commit('ADD_SHOT')">Add shot</button>-->
-    <!--<button @click="$store.commit('CHANGE_RATIO')">Change Ratio</button>-->
 
-    <!--<div id="sb_sheet">-->
       <sb_sheet_shot v-for="shotId in $store.state.shotsOrder" :key="shotId" :shotId="shotId"/>
-    <!--</div>-->
 
   </div>
 </template>

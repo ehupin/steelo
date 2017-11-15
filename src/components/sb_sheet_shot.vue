@@ -5,19 +5,17 @@
 
 
     <div id="sb_shot" >
-
-      <div class="delete-button-container">
-        <i class="fa fa-close delete-button"></i>
+      <div class="shot_headers">
+        <div>Shot {{paddedNumber}}</div>
+        <i class="fa fa-close delete-button" @click="deleteShot"></i>
       </div>
-
-      <div>Shot {{paddedNumber}}</div>
 
       <div :style="thumbnailStyle" @click="thumbnailClicked">
         <img :src="$store.getters.getShotThumbnail(shotId).src" />
       </div>
 
       <div id="description">
-        <input placeholder="Description..."/>
+        <input v-model="description" placeholder="Description..."/>
       </div>
 
     </div>
@@ -28,6 +26,11 @@
 </template>
 
 <style scoped>
+  .shot_headers{
+    display: flex;
+    justify-content: space-between;
+  }
+
   .delete-button-container{
     height: 20px;
     display: flex;
@@ -40,7 +43,6 @@
     cursor: pointer;
   }
   .delete-button:hover{
-    font-size: 24px;
     color: #b7b7b7;
     transition: color 0.1s;
   }
@@ -52,13 +54,12 @@
   }
   #sb_shot{
     background-color: white;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-bottom: 20px;
+    padding: 20px;
     box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
   }
   img{
     width: inherit;
+    cursor: url('../assets/icons/pencil.png')
     /*cursor: url("../assets/icons/pencil.png")*/
   }
   #description input{
@@ -67,6 +68,9 @@
     width: 100%;
     outline-width: 0;
     /*color: #d9d9d9*/
+  }
+  ::-webkit-input-placeholder{
+    opacity: 1;
   }
 
 </style>

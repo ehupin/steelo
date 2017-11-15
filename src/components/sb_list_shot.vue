@@ -9,20 +9,41 @@
         <img :src="$store.getters.getShotThumbnail(shotId).src" />
       </div>
 
-      <div id="shot_details">Shot {{paddedNumber}}</div>
+      <div class="shot_details">
+        <div class="shot_headers">
+          Shot {{paddedNumber}}
+          <i class="fa fa-close delete-button" @click="deleteShot"></i>
+        </div>
 
-      <!--<div id="description">-->
-        <!--<input placeholder="Description..."/>-->
-      <!--</div>-->
+        <div id="description">
+          <input v-model="description" placeholder="Description..."/>
+        </div>
+      </div>
 
     </div>
 
-    <sb_sheet_drop_area v-if="isLast" orientation="horizontal"/>
+    <sb_sheet_drop_area v-if="isLast" orientation="horizontal" />
 
   </div>
 </template>
 
 <style scoped>
+
+  .shot_headers{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .delete-button{
+    font-size: 16px;
+    color: #ebebeb;
+    transition: color 0.1s;
+    cursor: pointer;
+  }
+  .delete-button:hover{
+    color: #b7b7b7;
+    transition: color 0.1s;
+  }
 
   #sb_list_shot{
     display: flex;
@@ -33,11 +54,22 @@
     box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
   }
   img{
-    width: inherit;
+    height: inherit;
   }
 
-  #shot_details{
+  .shot_details{
     padding-left: 5px;
+    display: flex;
+    flex-direction: column;
+  }
+  #description input {
+    font-style: italic;
+    border: none;
+    width: 100%;
+    outline-width: 0;
+  }
+  ::-webkit-input-placeholder{
+    color: #bfbfbf;
   }
 </style>
 

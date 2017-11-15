@@ -125,6 +125,7 @@
     },
     props: {
       nextShotId: '',
+      previousShotId: '',
       orientation: {
         default: 'vertical'
       },

@@ -7,13 +7,14 @@ Vue.use(Vuex)
 function Shot(){
   this.id = uuidv4();
   this.description = '';
-  this.image = new Image()
+  this.image = null;
   this.layers = []
 }
 
 const store = new Vuex.Store({
   state: {
     frameRatio: 1.77,
+    frameWidth: 800,
     shots: {},
     shotsOrder: [],
     layers: {}
@@ -26,6 +27,7 @@ const store = new Vuex.Store({
   mutations: {
     ADD_SHOT(state, data){
       let shot = new Shot();
+      shot.image = new Image(state.frameWidth, state.frameWidth/state.frameRatio)
       Vue.set(state.shots, shot.id, shot);
 
       if (data && data.before){
@@ -34,7 +36,9 @@ const store = new Vuex.Store({
       }else{
         state.shotsOrder.push(shot.id);
       }
-
+    },
+    SET_SHOT_DESCRIPTION(state, data){
+      state.shots[data.shotId].description = data.description
     },
     CHANGE_RATIO(state){
       state.frameRatio = 1.7
@@ -60,7 +64,6 @@ const store = new Vuex.Store({
       }
     },
     COPY_SHOT(state, data){
-
       let originalShot = state.shots[data.shotId]
 
       let copiedShot = new Shot();
@@ -78,7 +81,12 @@ const store = new Vuex.Store({
       }else{
         state.shotsOrder.push(copiedShot.id)
       }
+    },
+    DELETE_SHOT(state, data){
+      let shotIndex = state.shotsOrder.indexOf(data.shotId)
+      state.shotsOrder.splice(shotIndex, 1);
 
+      delete state.shots[data.shotId]
     }
   },
   getters: {
