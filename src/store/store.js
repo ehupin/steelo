@@ -8,7 +8,14 @@ function Shot(){
   this.id = uuidv4();
   this.description = '';
   this.image = null;
-  this.layers = []
+  this.layers = [];
+  this.visibleLayers = []
+}
+
+function Layer(){
+  this.id = uuidv4();
+  this.name = '';
+  this.image = null;
 }
 
 const store = new Vuex.Store({
@@ -17,7 +24,10 @@ const store = new Vuex.Store({
     frameWidth: 800,
     shots: {},
     shotsOrder: [],
-    layers: {}
+    layers: {},
+    activeLayer: '',
+    activeCanvas: Object,
+    drawingToolShot:'',
   },
   actions: {
     addShot({commit}) {
@@ -26,10 +36,21 @@ const store = new Vuex.Store({
   },
   mutations: {
     ADD_SHOT(state, data){
+      // create shot
       let shot = new Shot();
       shot.image = new Image(state.frameWidth, state.frameWidth/state.frameRatio)
       Vue.set(state.shots, shot.id, shot);
 
+      // create first layer
+      let layer =new Layer();
+      layer.image = new Image(state.frameWidth, state.frameWidth/state.frameRatio)
+      Vue.set(state.layers, layer.id, layer);
+
+      // add layer to shot
+      shot.layers.push(layer.id)
+      shot.visibleLayers.push(layer.id)
+
+      // insert it in order
       if (data && data.before){
         let insertIndex = state.shotsOrder.indexOf(data.before);
         state.shotsOrder.splice( insertIndex, 0, shot.id );
@@ -48,6 +69,12 @@ const store = new Vuex.Store({
       newImage.src = data.imageUrl
       Vue.set(state.shots[data.shotId], 'image', newImage);
     },
+    SET_LAYER_IMAGE(state, data){
+      let newImage = new Image()
+      newImage.src = data.imageUrl
+      Vue.set(state.layers[data.layerId], 'image', newImage);
+    },
+
     MOVE_SHOT(state,data){
       // get shot position and remove it from shosOrder list
       let from = state.shotsOrder.indexOf(data.shotId);
@@ -87,7 +114,38 @@ const store = new Vuex.Store({
       state.shotsOrder.splice(shotIndex, 1);
 
       delete state.shots[data.shotId]
-    }
+    },
+    SET_LAYER_NAME(state, data){
+      state.layers[data.layerId].name = data.name
+    },
+    ADD_LAYER(state, data){
+      // create first layer
+      let layer =new Layer();
+      layer.image = new Image(state.frameWidth, state.frameWidth/state.frameRatio)
+      Vue.set(state.layers, layer.id, layer);
+
+      // add layer to shot
+      state.shots[data.shotId].layers.push(layer.id)
+      state.shots[data.shotId].visibleLayers.push(layer.id)
+
+    },
+    SET_ACTIVE_LAYER(state, data){
+      // add layer to shot
+      state.activeLayer = data.layerId
+    },
+    SET_DRAWINGTOOL_SHOT(state, data){
+      // add layer to shot
+      state.drawingToolShot = data.shotId
+    },
+    TOGGLE_LAYER_VISIBILITY(state, data){
+      if (state.shots[data.shotId].visibleLayers.indexOf(data.layerId) == -1){
+        state.shots[data.shotId].visibleLayers.push(data.layerId)
+      }else{
+        let layerIndex = state.shots[data.shotId].visibleLayers.indexOf(data.layerId);
+        state.shots[data.shotId].visibleLayers.splice(layerIndex, 1);
+      }
+
+    },
   },
   getters: {
     getShotIndex:(state, geters) => (shotId) =>{

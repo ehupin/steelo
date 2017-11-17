@@ -1,5 +1,5 @@
 <template>
-  <div id="sb_sheet_background">
+    <div id="sb_sheet_background">
 
       <sb_sheet_shot v-for="shotId in $store.state.shotsOrder" :key="shotId" :shotId="shotId"/>
 

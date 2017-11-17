@@ -1,37 +1,48 @@
 <template>
-  <!--<div>-->
-    <canvas ref='canvas'
-            :width="width"
-            :height="height"
-            :style="style"
-            @mousedown="startDraw"
-            @mousemove="moveDraw"
-            @mouseup="isDrawing=false"
-            @mouseout="isDrawing=false">
-    </canvas>
-    <!--<button @click="importImage">po</button>-->
-  <!--</div>-->
+  <div id="draw_area" :style="style">
+
+    <layer_canvas v-for="layerId in $store.state.shots[shotId].layers"
+                  ref="layers"
+                  :key="layerId"
+                  :layerId="layerId"
+                  :shotId="shotId"></layer_canvas>
+
+  </div>
 </template>
 
 <style>
-  canvas{
-    background-color: white;
-    border:1px solid #000000;
+  #draw_area{
+    /*background: linear-gradient(45deg, rgba(0,0,0,0.0980392) 25%, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 75%, rgba(0,0,0,0.0980392) 75%, rgba(0,0,0,0.0980392) 0), linear-gradient(45deg, rgba(0,0,0,0.0980392) 25%, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 75%, rgba(0,0,0,0.0980392) 75%, rgba(0,0,0,0.0980392) 0), rgb(255, 255, 255);*/
+    /*background-repeat: repeat;*/
+    border: black 2px solid;
+    background: linear-gradient(45deg,
+                                white 25%,
+                                rgba(0,0,0,0) 25%,
+                                rgba(0,0,0,0) 75%,
+                                white 75%,
+                                white 0),
+                                linear-gradient(45deg,
+                                                white 26%,
+                                                rgba(0,0,0,0) 26%,
+                                                rgba(0,0,0,0) 74%,
+                                                white 74%,
+                                                white 0),
+                                                rgba(0, 0, 0, 0.05);
+    background-repeat: repeat;
+    background-position: 0 0, 10px 10px;
+    background-origin: padding-box;
+    background-clip: border-box;
+    background-size: 20px 20px;
   }
 </style>
 
 <script>
+
+  import layer_canvas from './layer_canvas.vue'
+  import drawing_canvas from './drawing_canvas.vue'
+
   export default {
-    data: function(){
-      return {
-        prevPos: {x:0, y:0},
-        context: null,
-        isDrawing: false,
-      }
-    },
-    mounted: function(){
-      this.context = this.$refs.canvas.getContext("2d")
-    },
+    components: {layer_canvas, drawing_canvas},
     computed:{
       width(){
         return this.$store.state.frameWidth
@@ -41,47 +52,13 @@
       },
       style(){
         return{
-          width: this.width,
-          height: this.height,
+          width: this.width + 'px',
+          height: this.height + 'px',
         }
+      },
+      shotId(){
+        return this.$store.state.drawingToolShot
       },
     },
-    methods:{
-      getEventPos(event){
-        let rect = this.$refs.canvas.getBoundingClientRect()
-        return {x: event.clientX - rect.left,
-                y: event.clientY - rect.top}
-      },
-      startDraw: function (e) {
-        this.isDrawing = true
-        this.prevPos.x = this.getEventPos(e)
-      },
-      moveDraw: function(e){
-        if (!this.isDrawing){
-          return
-        }
-        let eventPos = this.getEventPos(e)
-        let posX = eventPos.x
-        let posY = eventPos.y
-
-        this.context.beginPath();
-        this.context.moveTo(this.prevPos.x, this.prevPos.y);
-        this.context.lineTo(posX, posY);
-        this.context.strokeStyle = 'black';
-        this.context.lineWidth = 1.5;
-        this.context.stroke();
-
-        this.prevPos.x = posX;
-        this.prevPos.y = posY;
-      },
-      importImage: function(){
-        let imageObj = new Image();
-        let that =  this
-        imageObj.onload = function() {
-          that.context.drawImage(imageObj, 0, 0);
-        };
-        imageObj.src = 'http://www.html5canvastutorials.com/demos/assets/darth-vader.jpg';
-      }
-    }
   }
 </script>

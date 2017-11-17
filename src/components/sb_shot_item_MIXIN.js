@@ -36,7 +36,7 @@ export const sb_shot_item_MIXIN =  {
   },
   methods: {
     thumbnailClicked() {
-      EventBus.$emit('openDrawingTool', this.shotId)
+      EventBus.$emit('thumbnailClicked', this.shotId)
     },
     dragStart(event) {
       console.log(event)
