@@ -1,8 +1,7 @@
 <template>
   <div id="draw_area"
        ref="drawArea"
-       :style="style"
-        @mousemove="mouseMove">
+       :style="style">
 
     <layer_canvas v-for="layerId in $store.state.shots[shotId].layers"
                   ref="layers"
@@ -37,7 +36,7 @@
                                                 rgba(0,0,0,0) 74%,
                                                 white 74%,
                                                 white 0),
-                                                rgba(0, 0, 0, 0.05);
+                                                rgba(240, 240, 240, 1);
     background-repeat: repeat;
     background-position: 0 0, 10px 10px;
     background-origin: padding-box;
@@ -61,10 +60,12 @@
     mounted(){
       window.addEventListener('keydown', this.onKeyDown);
       window.addEventListener('keyup', this.onKeyUp);
+      window.addEventListener('mousemove', this.mouseMove);
     },
     destroyed(){
       window.removeEventListener('keydown', this.onKeyPress);
       window.removeEventListener('keyup', this.onKeyUp);
+      window.removeEventListener('mousemove', this.mouseMove);
     },
     data(){
       return{
@@ -114,14 +115,13 @@
         this.lastMouseMoveEvent = event
       },
       getEventPos(event){
-        let rect = this.$refs.drawArea.getBoundingClientRect()
+        let rect = this.$refs.layers[0].$el.getBoundingClientRect()
         return {x: event.clientX - rect.left,
           y: event.clientY - rect.top}
       },
       showColorPicker(){
-        let mousePosition = this.getEventPos(this.lastMouseMoveEvent)
-        this.colorPickerPosition = {x: mousePosition.x - 30 + 'px',
-          y: mousePosition.y + 140 + 'px'}
+        this.colorPickerPosition = {x: this.lastMouseMoveEvent.clientX - 330 + 'px',
+          y: this.lastMouseMoveEvent.clientY - 50  + 'px'}
         this.colorPickerIsVisible = true
       }
     },

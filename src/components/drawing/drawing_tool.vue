@@ -1,14 +1,11 @@
 <template>
   <div id="background" ref="drawingToolBackground" v-if="visible" @click="exit">
     <div id="drawing_tool">
-      <div>Shot {{$store.getters.getShotIndex(shotId)}}</div>
+      <div id="shot-number">Shot {{paddedShotNumber}}</div>
       <div id="main_area">
         <draw_area ref="drawCanvas" :shotId="shotId"></draw_area>
         <layerStack :shotId="shotId"/>
       </div>
-
-
-      <button @click="saveThumbnail">Save</button>
     </div>
   </div>
 </template>
@@ -18,7 +15,7 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 255, 255, 0.79);
+    background-color: rgba(255, 255, 255, 0.95);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -27,6 +24,9 @@
   #main_area{
     display: flex;
     flex-direction: row;
+  }
+  #shot-number{
+    font-size: 40px;
   }
 </style>
 
@@ -54,21 +54,21 @@
       height(){
         return this.width / this.$store.state.frameRatio
       },
+      paddedShotNumber(){
+        return this.$store.getters.getShotIndex(this.shotId).toString().padStart(3,'0')
+      },
     },
     methods: {
       saveThumbnail(){
-//        let imageUrl = this.$refs.drawCanvas.$refs.canvas.toDataURL("image/png")
-//        this.$store.commit('SET_SHOT_IMAGE', {shotId: this.shotId, imageUrl: imageUrl})
-//        this.$emit('exit')
-
-//        this.$refs.drawCanvas.saveLayers()
 
         var offscreenCanvas = document.createElement('canvas');
         offscreenCanvas.width = this.width;
         offscreenCanvas.height = this.height;
         var context = offscreenCanvas.getContext('2d');
-        for (let layerId of this.$store.state.shots[this.shotId].visibleLayers){
-          context.drawImage(this.$store.state.layers[layerId].image, 0, 0)
+        for (let layerId of this.$store.state.shots[this.shotId].layers){
+          if(this.$store.state.shots[this.shotId].visibleLayers.includes(layerId)){
+            context.drawImage(this.$store.state.layers[layerId].image, 0, 0)
+          }
         }
         let imageUrl = offscreenCanvas.toDataURL("image/png")
 //          this.$store.commit('SET_SHOT_IMAGE', {shotId: this.$store.state.drawingToolShot, imageUrl: imageUrl})

@@ -154,9 +154,6 @@ const store = new Vuex.Store({
     getShotThumbnail:(state, geters) => (shotId) =>{
       return state.shots[shotId].image
     },
-    getShotImage:(state, geters) => (shotId) =>{
-      return state.shots[shotId].image
-    }
   },
   modules:{
 
