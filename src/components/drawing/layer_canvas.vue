@@ -8,8 +8,8 @@
             :style="style"
             @mousedown="startDraw"
             @mousemove="moveDraw"
-            @mouseup="isDrawing=false"
-            @mouseout="isDrawing=false">
+            @mouseup="endDraw"
+            @mouseout="endDraw">
     </canvas>
   <!--</div>-->
 </template>
@@ -27,18 +27,15 @@
   export default {
     props:{
       layerId:'',
-      shotId: ''
+      shotId: '',
+      color: Object,
     },
     mounted(){
-      console.log('opopooppo')
       this.context = this.$refs.canvas.getContext("2d")
       let image = this.$store.state.layers[this.layerId].image
       this.context.drawImage(image, 0, 0)
     },
     beforeDestroy(){
-      let imageUrl = this.$refs.canvas.toDataURL("image/png")
-      this.$store.commit('SET_LAYER_IMAGE', {layerId: this.layerId, imageUrl: imageUrl})
-      console.log('boum')
     },
     data: function(){
       return {
@@ -63,14 +60,16 @@
       },
     },
     methods:{
+      save(){
+        let imageUrl = this.$refs.canvas.toDataURL("image/png")
+        this.$store.commit('SET_LAYER_IMAGE', {layerId: this.layerId, imageUrl: imageUrl})
+      },
       getEventPos(event){
         let rect = this.$refs.canvas.getBoundingClientRect()
         return {x: event.clientX - rect.left,
                 y: event.clientY - rect.top}
       },
       startDraw: function (e) {
-        console.log(this.$store.state.layers[this.layerId].name)
-        console.log(this.context)
         this.isDrawing = true
         this.prevPos.x = this.getEventPos(e)
       },
@@ -84,13 +83,19 @@
 
         this.context.beginPath();
         this.context.moveTo(this.prevPos.x, this.prevPos.y);
+        this.context.lineJoin = this.context.lineCap = 'round';
         this.context.lineTo(posX, posY);
-        this.context.strokeStyle = 'black';
-        this.context.lineWidth = 1.5;
+        this.context.strokeStyle = `rgba(${this.color.rgba.r},${this.color.rgba.g},${this.color.rgba.b},${this.color.rgba.a})`;
+        this.context.lineWidth = 6; //1.5;
         this.context.stroke();
 
         this.prevPos.x = posX;
         this.prevPos.y = posY;
+
+      },
+      endDraw(){
+        this.isDrawing = false
+        this.save()
       },
       importImage: function(){
         let imageObj = new Image();
@@ -100,15 +105,7 @@
         };
         imageObj.src = 'http://www.html5canvastutorials.com/demos/assets/darth-vader.jpg';
       },
-      draw(drawDatas){
 
-        this.context.beginPath();
-        this.context.moveTo(drawDatas.prevPosX, drawDatas.prevPosY);
-        this.context.lineTo(drawDatas.currentPosX, drawDatas.currentPosY);
-        this.context.strokeStyle = 'black';
-        this.context.lineWidth = 1.5;
-        this.context.stroke();
-      }
     }
   }
 </script>

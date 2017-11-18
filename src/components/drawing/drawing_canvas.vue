@@ -63,7 +63,6 @@
       },
       layers(){
         for (let layerId in this.$store.state.shots[this.shotId].layers){
-          console.log(layerId)
         }
       }
     },

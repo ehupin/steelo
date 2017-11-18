@@ -39,7 +39,6 @@ export const sb_shot_item_MIXIN =  {
       EventBus.$emit('thumbnailClicked', this.shotId)
     },
     dragStart(event) {
-      console.log(event)
       event.dataTransfer.setData("text", this.shotId);
     },
     deleteShot(){

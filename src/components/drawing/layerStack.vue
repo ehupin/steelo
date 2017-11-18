@@ -19,10 +19,8 @@
 
   export default {
     components: {layer},
-    computed: {
-      shotId(){
-        return this.$store.state.drawingToolShot
-      }
+    props: {
+      shotId: '',
     },
     methods: {
       addLayer(){
