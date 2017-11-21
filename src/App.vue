@@ -21,7 +21,7 @@
   }
   body, input {
     font-family: Ubuntu;
-    font-size: 12;
+    font-size: 12px;
   }
   #app{
     display: flex;

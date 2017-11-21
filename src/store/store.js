@@ -93,9 +93,32 @@ const store = new Vuex.Store({
     COPY_SHOT(state, data){
       let originalShot = state.shots[data.shotId]
 
+      // copy the shot
       let copiedShot = new Shot();
       copiedShot.description = originalShot.description
       copiedShot.image = originalShot.image.cloneNode()
+
+      // also copy its layers
+      for (let layerId of originalShot.layers){
+
+        // get original layer
+        let originalLayer = state.layers[layerId]
+        
+        // create new layer, set its attributes
+        let newLayer = new Layer()
+        newLayer.name = originalLayer.name
+        newLayer.image = originalLayer.image.cloneNode()
+
+        // add new layer to state
+        Vue.set(state.layers, newLayer.id, newLayer);
+
+        // add new layer to shot layers
+        copiedShot.layers.push(newLayer.id)
+
+        if (originalShot.visibleLayers.includes(layerId)){
+          copiedShot.visibleLayers.push(newLayer.id)
+        }
+      }
 
       Vue.set(state.shots, copiedShot.id, copiedShot);
 
