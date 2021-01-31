@@ -5,25 +5,10 @@
       :key="layerId"
       :layerId="layerId"
       :shotId="shotId"></layer_canvas>
-
-  <!--<canvas ref='canvas'-->
-          <!--:width="width"-->
-          <!--:height="height"-->
-          <!--:style="style"-->
-          <!--@mousedown="startDraw"-->
-          <!--@mousemove="moveDraw"-->
-          <!--@mouseup="isDrawing=false"-->
-          <!--@mouseout="isDrawing=false">-->
-  <!--</canvas>-->
   </div>
 </template>
 
 <style>
-  canvas{
-    /*background-color: white;*/
-    /*border:1px solid #000000;*/
-    position: absolute;
-  }
 </style>
 
 <script>
@@ -91,10 +76,6 @@
         this.context.lineWidth = 1.5;
         this.context.stroke();
 
-//        this.$emit('draw', {prevPosX: this.prevPos.x,
-//                            prevPosY: this.prevPos.y,
-//                            currentPosX: posX,
-//                            currentPosY: posY})
 
         this.prevPos.x = posX;
         this.prevPos.y = posY;

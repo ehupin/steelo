@@ -15,8 +15,9 @@
 </template>
 
 <style>
-  canvas{
+canvas{
     position: absolute;
+    cursor: url("../../assets/icons/pencil.png"), auto;
   }
   .inactive{
     pointer-events: none
@@ -34,8 +35,6 @@
       this.context = this.$refs.canvas.getContext("2d")
       let image = this.$store.state.layers[this.layerId].image
       this.context.drawImage(image, 0, 0)
-    },
-    beforeDestroy(){
     },
     data: function(){
       return {
@@ -86,7 +85,7 @@
         this.context.lineJoin = this.context.lineCap = 'round';
         this.context.lineTo(posX, posY);
         this.context.strokeStyle = `rgba(${this.color.rgba.r},${this.color.rgba.g},${this.color.rgba.b},${this.color.rgba.a})`;
-        this.context.lineWidth = 6; //1.5;
+        this.context.lineWidth = 6;
         this.context.stroke();
 
         this.prevPos.x = posX;
@@ -97,15 +96,6 @@
         this.isDrawing = false
         this.save()
       },
-      importImage: function(){
-        let imageObj = new Image();
-        let that =  this
-        imageObj.onload = function() {
-          that.context.drawImage(imageObj, 0, 0);
-        };
-        imageObj.src = 'http://www.html5canvastutorials.com/demos/assets/darth-vader.jpg';
-      },
-
     }
   }
 </script>

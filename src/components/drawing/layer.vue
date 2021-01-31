@@ -10,14 +10,11 @@
     box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
     padding: 10px;
     margin: 5px;
-    /*margin-left: 15px;*/
     background: #f4f4f4;
 
   }
   .activated{
     background: white;
-    /* box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.2); */
-    /*margin-left: 0;*/
   }
   .notvisible{
     color: #d2d2d2;

@@ -56,7 +56,9 @@
   img{
     height: inherit;
   }
-
+  #sb_listItem{
+    cursor: grab;
+  }
   .shot_details{
     padding-left: 5px;
     display: flex;
@@ -68,9 +70,7 @@
     width: 100%;
     outline-width: 0;
   }
-  ::-webkit-input-placeholder{
-    color: #bfbfbf;
-  }
+
 </style>
 
 <script>

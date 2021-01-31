@@ -21,8 +21,6 @@
 
 <style>
   #draw_area{
-    /*background: linear-gradient(45deg, rgba(0,0,0,0.0980392) 25%, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 75%, rgba(0,0,0,0.0980392) 75%, rgba(0,0,0,0.0980392) 0), linear-gradient(45deg, rgba(0,0,0,0.0980392) 25%, rgba(0,0,0,0) 25%, rgba(0,0,0,0) 75%, rgba(0,0,0,0.0980392) 75%, rgba(0,0,0,0.0980392) 0), rgb(255, 255, 255);*/
-    /*background-repeat: repeat;*/
     border: black 2px solid;
     background: linear-gradient(45deg,
                                 white 25%,
@@ -69,6 +67,7 @@
     },
     data(){
       return{
+        colorPickerKeyCode: 67, // key "c"
         colorPickerIsVisible: false,
         colorPickerPosition: {},
         color: {rgba:{r:0, g:0, b:0, a:1}},
@@ -94,7 +93,7 @@
     },
     methods:{
       onKeyDown(event){
-        if (event.keyCode === 67) {
+        if (event.keyCode === this.colorPickerKeyCode) {
           let overedItems = document.querySelectorAll(":hover")
           if(Object.values(overedItems).includes(this.$refs.drawArea)){
 
@@ -107,7 +106,7 @@
         }
       },
       onKeyUp(event){
-        if (event.keyCode === 67) {
+        if (event.keyCode === this.colorPickerKeyCode) {
           this.colorPickerIsVisible = false
         }
       },

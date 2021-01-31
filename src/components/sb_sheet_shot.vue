@@ -59,19 +59,14 @@
   }
   img{
     width: inherit;
-    cursor: url('../assets/icons/pencil.png')
-    /*cursor: url("../assets/icons/pencil.png")*/
   }
   #description input{
     font-style: italic;
     border: none;
     width: 100%;
     outline-width: 0;
-    /*color: #d9d9d9*/
   }
-  ::-webkit-input-placeholder{
-    opacity: 1;
-  }
+
 
 </style>
 
