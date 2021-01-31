@@ -25,7 +25,7 @@
     overflow: auto;
   }
   #layer-list {
-    min-height: min-content; /* needs vendor prefixes */
+    min-height: min-content;
     display: flex;
     flex-direction: column-reverse;
     justify-content: flex-start;

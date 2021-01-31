@@ -20,7 +20,7 @@
     overflow: hidden;
   }
   body, input {
-    font-family: Ubuntu;
+    font-family: "Lucida Console";
     font-size: 12px;
   }
   #app{

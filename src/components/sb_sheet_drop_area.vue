@@ -9,16 +9,18 @@
         @mouseout="mouseOver=false; expanded=false"
         @click="insertShot"
 
-        @dragover="onDragOver"
+        @dragenter="onDragOver"
         @dragleave="dragLeave">
-
-    <div v-if="mouseOver" class="plusSign">
+    <div v-if="mouseOver" class="plusSign" key="add">
       +
     </div>
-
+    <div v-else class="dropArea" key="add" :class="{
+                vertical: orientation === 'vertical',
+                horizontal: orientation === 'horizontal'
+              }">
       <div class="dropIcon top"
            v-if="dragOver"
-           @dragover="aboutToMove=true"
+           @dragover="dragOverMoveIcon"
            @dragleave="aboutToMove=false"
            @drop="moveDroppedShot"
            :class="{overed: aboutToMove}">
@@ -27,74 +29,70 @@
 
       <div class="dropIcon"
            v-if="dragOver"
-           @dragover="aboutToCopy=true"
+           @dragover="dragOverCopyIcon"
            @dragleave="aboutToCopy=false"
            @drop="copyDroppedShot"
            :class="{overed: aboutToCopy}">
         <img class="dropIconImage" src="../assets/icons/copy.png">
       </div>
-    <!--</div>-->
+    </div>
+
 
   </div>
 </template>
 
 <style>
-  .fade-enter-active{
-    transition: opacity 4s
-  }
-
-  .fade-enter,
-  .fade-leave-to
-  {
-    /*opacity: 0;*/
-  }
 
   .interShot{
     cursor: pointer;
-    transition: width 0.3s, height 0.3s, background 0.3s;
     display: flex;
-
+    transition: width 0.3s, height 0.3s;
   }
   .vertical{
+    font-size: 60px;
     height: inherit;
     width: 30px;
     flex-direction: column;
   }
   .horizontal{
-    height: 8px;
+    font-size: 30px;
+    height: 12px;
     width: inherit;
     flex-direction: row;
   }
-  .expanded{
-    background-color: #ececec;
-    transition: width 0.3s, height 0.3s, background 0.3s;
-  }
   .expanded.vertical{
-    font-size: 60px;
     width: 60px;
+    transition: width 0.3s;
   }
   .expanded.horizontal{
-    font-size: 20px;
     height: 35px;
+    transition: height 0.3s;
   }
-  .dragArea{
+  .dropArea.vertical {
     display: flex;
     flex-direction: column;
-    height: 100%
+    height: 100%;
+    width: 100%
   }
-
+  .dropArea.horizontal {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    width: 100%
+  }
   .dropIcon{
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
     height: 100%;
+    background-color: #c4c4c4;
+  }
+  .dropIcon.overed {
+    background-color: #282828;
   }
   .dropIcon.top{
     border-bottom: solid white 1px;
-  }
-  .dropIcon.overed{
-    background-color: #414141;
   }
   .dropIconImage{
     pointer-events: none;
@@ -104,11 +102,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    user-select: none;
-    cursor: inherit;
     height: 100%;
     width: 100%;
-    background-color: #414141;
+    background-color: #282828;
   }
 </style>
 
@@ -121,6 +117,7 @@
         dragOver : false,
         aboutToCopy:false,
         aboutToMove:false,
+        dragDepth: 0,
       }
     },
     props: {
@@ -139,25 +136,39 @@
       onDragOver(event){
         event.preventDefault();
         event.stopPropagation();
-        this.dragOver = true;
+        this.dragDepth += 1
         this.expanded = true;
+        this.dragOver = true;
       },
       dragLeave(event){
-        this.dragOver = false;
-        this.expanded = false;
+        this.dragDepth -= 1
+        if (this.dragDepth === 0){
+          this.dragOver = false;
+          this.expanded = false;
+        }
+        event.stopPropagation();
+        event.preventDefault();
+      },
+      dragOverMoveIcon(event){
         event.preventDefault();
         event.stopPropagation();
+        this.aboutToMove=true
+      },
+      dragOverCopyIcon(event){
+        event.preventDefault();
+        event.stopPropagation();
+        this.aboutToCopy=true
       },
       moveDroppedShot(event){
         event.preventDefault();
-        var shotId = event.dataTransfer.getData("text");
+        let shotId = event.dataTransfer.getData("text");
         this.$store.commit('MOVE_SHOT', {shotId: shotId, before: this.nextShotId})
         this.dragOver = false;
         this.expanded = false;
       },
       copyDroppedShot(event){
         event.preventDefault();
-        var shotId = event.dataTransfer.getData("text");
+        let shotId = event.dataTransfer.getData("text");
         this.$store.commit('COPY_SHOT', {shotId: shotId, before: this.nextShotId})
         this.dragOver = false;
         this.expanded = false;

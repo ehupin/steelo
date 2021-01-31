@@ -40,11 +40,6 @@
     components:{sb_sheet_shot, sb_sheet_drop_area},
     mounted(){
       this.$store.commit('ADD_SHOT')
-    },
-    methods: {
-      addShotButtonClicked (){
-        this.$store.dispatch('addShot')
-      }
     }
   }
 
